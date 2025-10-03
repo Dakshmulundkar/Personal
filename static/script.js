@@ -35,8 +35,11 @@ document.addEventListener('DOMContentLoaded', () => {
             authButton.addEventListener('click', (e) => {
                 e.preventDefault();
                 if (confirm('Do you want to logout?')) {
-                    localStorage.removeItem('user');
-                    window.location.href = 'index.html';
+                    fetch('/api/logout', { method: 'POST' })
+                        .then(() => {
+                            localStorage.removeItem('user');
+                            window.location.href = '/';
+                        });
                 }
             });
         }
@@ -47,7 +50,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
         link.addEventListener('click', (event) => {
-            event.preventDefault(); 
+            // Only prevent default for links that don't have a real href
+            if (link.getAttribute('href') === '#') {
+                event.preventDefault();
+            }
+            // Update active class
             document.querySelector('.nav-link.active')?.classList.remove('active');
             event.currentTarget.classList.add('active');
         });

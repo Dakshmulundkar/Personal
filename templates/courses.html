@@ -11,8 +11,8 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="courses.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='courses.css') }}">
 </head>
 <body>
 
@@ -24,9 +24,9 @@
             </div>
             
             <ul class="nav-links">
-                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="/" class="nav-link">Home</a></li>
                 <li><a href="#" class="nav-link">Dashboard</a></li>
-                <li><a href="courses.html" class="nav-link active">Courses</a></li>
+                <li><a href="/courses" class="nav-link active">Courses</a></li>
                 <li><a href="#" class="nav-link">Events</a></li>
             </ul>
             
@@ -39,7 +39,7 @@
                     <i class="fa-solid fa-moon"></i>
                 </button>
                 
-                <a href="login.html" class="login-btn" id="authButton">Login</a>
+                <a href="/login" class="login-btn" id="authButton">Login</a>
             </div>
         </nav>
     </header>
@@ -63,13 +63,18 @@
                             <i class="fa-solid fa-book"></i>
                             Subject Name
                         </label>
-                        <input 
-                            type="text" 
+                        <select 
                             id="subjectName" 
                             name="subjectName" 
-                            placeholder="Enter subject name"
                             required
                         >
+                            <option value="">Select a subject</option>
+                            <option value="DWM">DWM</option>
+                            <option value="IP">IP</option>
+                            <option value="CN">CN</option>
+                            <option value="SE">SE</option>
+                            <option value="TCS">TCS</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="pdfUpload">
@@ -98,92 +103,13 @@
             </div>
         </div>
 
-        <div class="courses-grid">
-            <div class="course-card">
-                <div class="course-icon">
-                    <i class="fa-solid fa-code"></i>
-                </div>
-                <h3>Web Development</h3>
-                <p>Master HTML, CSS, JavaScript and modern frameworks</p>
-                <div class="course-meta">
-                    <span><i class="fa-solid fa-clock"></i> 12 weeks</span>
-                    <span><i class="fa-solid fa-users"></i> 150 students</span>
-                </div>
-                <button class="course-btn">Enroll Now</button>
-            </div>
-
-            <div class="course-card">
-                <div class="course-icon">
-                    <i class="fa-solid fa-mobile-screen"></i>
-                </div>
-                <h3>Mobile App Development</h3>
-                <p>Build native and cross-platform mobile applications</p>
-                <div class="course-meta">
-                    <span><i class="fa-solid fa-clock"></i> 10 weeks</span>
-                    <span><i class="fa-solid fa-users"></i> 120 students</span>
-                </div>
-                <button class="course-btn">Enroll Now</button>
-            </div>
-
-            <div class="course-card">
-                <div class="course-icon">
-                    <i class="fa-solid fa-database"></i>
-                </div>
-                <h3>Data Science</h3>
-                <p>Learn data analysis, machine learning and AI</p>
-                <div class="course-meta">
-                    <span><i class="fa-solid fa-clock"></i> 16 weeks</span>
-                    <span><i class="fa-solid fa-users"></i> 200 students</span>
-                </div>
-                <button class="course-btn">Enroll Now</button>
-            </div>
-
-            <div class="course-card">
-                <div class="course-icon">
-                    <i class="fa-solid fa-brain"></i>
-                </div>
-                <h3>Artificial Intelligence</h3>
-                <p>Explore neural networks, deep learning and AI systems</p>
-                <div class="course-meta">
-                    <span><i class="fa-solid fa-clock"></i> 14 weeks</span>
-                    <span><i class="fa-solid fa-users"></i> 180 students</span>
-                </div>
-                <button class="course-btn">Enroll Now</button>
-            </div>
-
-            <div class="course-card">
-                <div class="course-icon">
-                    <i class="fa-solid fa-shield-halved"></i>
-                </div>
-                <h3>Cybersecurity</h3>
-                <p>Master security protocols and ethical hacking</p>
-                <div class="course-meta">
-                    <span><i class="fa-solid fa-clock"></i> 12 weeks</span>
-                    <span><i class="fa-solid fa-users"></i> 95 students</span>
-                </div>
-                <button class="course-btn">Enroll Now</button>
-            </div>
-
-            <div class="course-card">
-                <div class="course-icon">
-                    <i class="fa-solid fa-cloud"></i>
-                </div>
-                <h3>Cloud Computing</h3>
-                <p>Learn AWS, Azure and cloud architecture</p>
-                <div class="course-meta">
-                    <span><i class="fa-solid fa-clock"></i> 10 weeks</span>
-                    <span><i class="fa-solid fa-users"></i> 140 students</span>
-                </div>
-                <button class="course-btn">Enroll Now</button>
-            </div>
-        </div>
     </main>
     
-    <script src="script.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
     <script>
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user) {
-            window.location.href = 'login.html';
+            window.location.href = '/login';
         }
 
         const pdfUpload = document.getElementById('pdfUpload');
@@ -201,7 +127,7 @@
             }
         });
 
-        uploadForm.addEventListener('submit', (e) => {
+        uploadForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const subjectName = document.getElementById('subjectName').value;
@@ -214,16 +140,35 @@
                 uploadBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
                 uploadBtn.disabled = true;
                 
-                setTimeout(() => {
-                    alert(`Course material uploaded successfully!\nSubject: ${subjectName}\nFile: ${pdfFile.name}`);
-                    uploadForm.reset();
-                    fileNameDisplay.textContent = 'Choose a PDF file';
-                    fileNameDisplay.style.color = 'var(--text-secondary)';
+                try {
+                    const formData = new FormData();
+                    formData.append('subjectName', subjectName);
+                    formData.append('pdfUpload', pdfFile);
+                    
+                    const response = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        alert(data.message);
+                        uploadForm.reset();
+                        fileNameDisplay.textContent = 'Choose a PDF file';
+                        fileNameDisplay.style.color = 'var(--text-secondary)';
+                    } else {
+                        alert(data.message || 'Upload failed');
+                    }
+                } catch (error) {
+                    alert('Network error. Please try again.');
+                } finally {
                     uploadBtn.innerHTML = originalContent;
                     uploadBtn.disabled = false;
-                }, 1500);
+                }
             }
         });
+
     </script>
 </body>
 </html>

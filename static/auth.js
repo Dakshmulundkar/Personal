@@ -46,33 +46,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
             const submitBtn = loginForm.querySelector('.auth-submit-btn');
             const originalText = submitBtn.innerHTML;
             
             submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Signing in...';
             submitBtn.disabled = true;
             
-            setTimeout(() => {
-                const userName = email.split('@')[0];
-                const user = {
-                    name: userName,
-                    email: email
-                };
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
                 
-                localStorage.setItem('user', JSON.stringify(user));
+                const data = await response.json();
                 
-                window.location.href = 'index.html';
-            }, 1000);
+                if (data.success) {
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    window.location.href = '/';
+                } else {
+                    alert(data.message || 'Login failed');
+                }
+            } catch (error) {
+                alert('Network error. Please try again.');
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
         });
     }
 
     const signupForm = document.getElementById('signupForm');
     if (signupForm) {
-        signupForm.addEventListener('submit', (e) => {
+        signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const password = document.getElementById('signupPassword').value;
@@ -93,16 +106,34 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating account...';
             submitBtn.disabled = true;
             
-            setTimeout(() => {
-                const user = {
-                    name: `${firstName} ${lastName}`,
-                    email: email
-                };
+            try {
+                const response = await fetch('/api/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        email, 
+                        password, 
+                        firstName, 
+                        lastName 
+                    })
+                });
                 
-                localStorage.setItem('user', JSON.stringify(user));
+                const data = await response.json();
                 
-                window.location.href = 'index.html';
-            }, 1000);
+                if (data.success) {
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    window.location.href = '/';
+                } else {
+                    alert(data.message || 'Signup failed');
+                }
+            } catch (error) {
+                alert('Network error. Please try again.');
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
         });
     }
 

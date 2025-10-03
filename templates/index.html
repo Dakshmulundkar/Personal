@@ -11,7 +11,7 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
@@ -23,9 +23,9 @@
             </div>
             
             <ul class="nav-links">
-                <li><a href="index.html" class="nav-link active">Home</a></li>
+                <li><a href="/" class="nav-link active">Home</a></li>
                 <li><a href="#" class="nav-link">Dashboard</a></li>
-                <li><a href="courses.html" class="nav-link">Courses</a></li>
+                <li><a href="/courses" class="nav-link">Courses</a></li>
                 <li><a href="#" class="nav-link">Events</a></li>
             </ul>
             
@@ -38,7 +38,7 @@
                     <i class="fa-solid fa-moon"></i>
                 </button>
                 
-                <a href="login.html" class="login-btn" id="authButton">Login</a>
+                <a href="/login" class="login-btn" id="authButton">Login</a>
             </div>
         </nav>
     </header>
@@ -52,6 +52,6 @@
         <div class="content-placeholder"></div>
     </main>
     
-    <script src="script.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
