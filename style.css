@@ -465,6 +465,16 @@ body.light-theme .theme-toggle-btn .fa-sun {
 }
 
 /* --- Responsive Design --- */
+@media (max-width: 1024px) {
+    .main-nav {
+        padding: 14px 24px;
+    }
+
+    .hero-section h1 {
+        font-size: 4rem;
+    }
+}
+
 @media (max-width: 768px) {
     .main-nav {
         flex-wrap: wrap;
@@ -472,19 +482,139 @@ body.light-theme .theme-toggle-btn .fa-sun {
         padding: 12px 20px;
     }
     
+    .logo-container h1 {
+        font-size: 1.1rem;
+    }
+
+    .logo-container i {
+        font-size: 1.6rem;
+    }
+    
     .nav-links {
         order: 3;
         width: 100%;
         margin-top: 12px;
         justify-content: center;
+        gap: 6px;
+    }
+
+    .nav-link {
+        padding: 8px 14px;
+        font-size: 0.9rem;
+    }
+
+    .header-actions {
+        gap: 12px;
+    }
+
+    .icon-link {
+        width: 38px;
+        height: 38px;
+        font-size: 1.1rem;
+    }
+
+    .theme-toggle-btn {
+        width: 40px;
+        height: 40px;
+    }
+
+    .login-btn {
+        padding: 9px 20px;
+        font-size: 0.9rem;
+    }
+
+    .content-area {
+        padding: 0 20px;
     }
     
+    .hero-section {
+        padding: 80px 20px 60px;
+    }
+
     .hero-section h1 {
         font-size: 3rem;
     }
     
     .hero-section p {
-        font-size: 1.1rem;
+        font-size: 1.15rem;
+    }
+
+    .content-placeholder {
+        height: 250px;
+        margin-top: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-nav {
+        padding: 10px 16px;
+    }
+
+    .logo-container h1 {
+        font-size: 0.95rem;
+    }
+
+    .logo-container i {
+        font-size: 1.4rem;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    .header-actions {
+        gap: 10px;
+    }
+
+    .icon-link {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+
+    .theme-toggle-btn {
+        width: 38px;
+        height: 38px;
+    }
+
+    .login-btn {
+        padding: 8px 18px;
+        font-size: 0.85rem;
+    }
+
+    .content-area {
+        padding: 0 16px;
+    }
+
+    .hero-section {
+        padding: 60px 16px 40px;
+    }
+
+    .hero-section h1 {
+        font-size: 2.2rem;
+    }
+
+    .hero-section p {
+        font-size: 1rem;
+    }
+
+    .content-placeholder {
+        height: 200px;
+        margin-top: 24px;
+    }
+}
+
+@media (max-width: 360px) {
+    .logo-container h1 {
+        font-size: 0.85rem;
+    }
+
+    .hero-section h1 {
+        font-size: 1.8rem;
+    }
+
+    .hero-section p {
+        font-size: 0.95rem;
     }
 }
 

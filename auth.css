@@ -76,13 +76,14 @@
     -webkit-backdrop-filter: saturate(180%) blur(20px);
     border: 1px solid var(--border-color);
     border-radius: 24px;
-    padding: 50px;
+    padding: 50px 40px;
     width: 100%;
-    max-width: 480px;
+    max-width: 520px;
     position: relative;
     z-index: 1;
     box-shadow: 0 20px 80px var(--shadow-color);
     animation: authCardAppear 0.8s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+    box-sizing: border-box;
 }
 
 @keyframes authCardAppear {
@@ -152,14 +153,15 @@
 
 .form-row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    min-width: 0;
 }
 
 .form-group label {
@@ -185,6 +187,8 @@
     color: var(--text-primary);
     font-family: 'Inter', sans-serif;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .form-group input:focus {
@@ -417,13 +421,34 @@
 
 /* --- Responsive Design --- */
 @media (max-width: 768px) {
+    .auth-container {
+        padding: 30px 16px;
+    }
+
     .auth-card {
-        padding: 35px 25px;
+        padding: 40px 24px;
         max-width: 100%;
+        border-radius: 20px;
+    }
+
+    .auth-icon {
+        width: 70px;
+        height: 70px;
+        font-size: 2.2rem;
+        margin-bottom: 20px;
+    }
+
+    .auth-header h2 {
+        font-size: 1.75rem;
+    }
+
+    .auth-header p {
+        font-size: 0.95rem;
     }
 
     .form-row {
         grid-template-columns: 1fr;
+        gap: 20px;
     }
 
     .form-options {
@@ -432,17 +457,114 @@
         gap: 12px;
     }
 
-    .auth-header h2 {
-        font-size: 1.75rem;
+    .remember-me {
+        font-size: 0.85rem;
+    }
+
+    .forgot-password {
+        font-size: 0.85rem;
     }
 
     .gradient-orb {
         filter: blur(60px);
+        opacity: 0.2;
+    }
+
+    .orb-1 {
+        width: 350px;
+        height: 350px;
+    }
+
+    .orb-2 {
+        width: 300px;
+        height: 300px;
+    }
+
+    .orb-3 {
+        width: 250px;
+        height: 250px;
     }
 }
 
 @media (max-width: 480px) {
+    .auth-container {
+        padding: 20px 12px;
+    }
+
+    .auth-card {
+        padding: 30px 20px;
+        border-radius: 16px;
+    }
+
+    .auth-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+        margin-bottom: 16px;
+    }
+
+    .auth-header {
+        margin-bottom: 30px;
+    }
+
+    .auth-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .auth-header p {
+        font-size: 0.9rem;
+    }
+
+    .auth-form {
+        gap: 20px;
+    }
+
+    .form-group input {
+        padding: 12px 14px;
+        font-size: 0.95rem;
+    }
+
+    .form-group label {
+        font-size: 0.85rem;
+    }
+
+    .password-input-wrapper input {
+        padding-right: 44px;
+    }
+
+    .auth-submit-btn {
+        padding: 14px 24px;
+        font-size: 1rem;
+    }
+
     .social-login {
         grid-template-columns: 1fr;
+    }
+
+    .social-btn {
+        padding: 12px 16px;
+        font-size: 0.9rem;
+    }
+
+    .auth-footer p {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .auth-card {
+        padding: 25px 16px;
+    }
+
+    .main-nav {
+        padding: 12px 16px;
+    }
+
+    .logo-container h1 {
+        font-size: 0.95rem;
+    }
+
+    .nav-links {
+        display: none;
     }
 }
