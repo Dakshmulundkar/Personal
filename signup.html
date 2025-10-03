@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - A. P. Shah Institute of Technology</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <nav class="main-nav">
+            <div class="logo-container">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <h1>A. P. Shah Institute of Technology</h1>
+            </div>
+            
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="#" class="nav-link">Dashboard</a></li>
+                <li><a href="#" class="nav-link">Courses</a></li>
+                <li><a href="#" class="nav-link">Events</a></li>
+            </ul>
+            
+            <div class="header-actions">
+                <a href="#" class="icon-link"><i class="fa-solid fa-bell"></i></a>
+                <a href="#" class="icon-link"><i class="fa-solid fa-comment-dots"></i></a>
+                
+                <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+                    <i class="fa-solid fa-sun"></i>
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                
+                <a href="login.html" class="login-btn">Login</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-icon">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+                <h2>Create Account</h2>
+                <p>Join us and start your learning journey today</p>
+            </div>
+
+            <form class="auth-form" id="signupForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">
+                            <i class="fa-solid fa-user"></i>
+                            First Name
+                        </label>
+                        <input 
+                            type="text" 
+                            id="firstName" 
+                            name="firstName" 
+                            placeholder="John"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lastName">
+                            <i class="fa-solid fa-user"></i>
+                            Last Name
+                        </label>
+                        <input 
+                            type="text" 
+                            id="lastName" 
+                            name="lastName" 
+                            placeholder="Doe"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="signupEmail">
+                        <i class="fa-solid fa-envelope"></i>
+                        Email Address
+                    </label>
+                    <input 
+                        type="email" 
+                        id="signupEmail" 
+                        name="email" 
+                        placeholder="john.doe@example.com"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="signupPassword">
+                        <i class="fa-solid fa-lock"></i>
+                        Password
+                    </label>
+                    <div class="password-input-wrapper">
+                        <input 
+                            type="password" 
+                            id="signupPassword" 
+                            name="password" 
+                            placeholder="Create a strong password"
+                            required
+                        >
+                        <button type="button" class="toggle-password" aria-label="Toggle password visibility">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="password-strength">
+                        <div class="strength-bar"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">
+                        <i class="fa-solid fa-lock"></i>
+                        Confirm Password
+                    </label>
+                    <div class="password-input-wrapper">
+                        <input 
+                            type="password" 
+                            id="confirmPassword" 
+                            name="confirmPassword" 
+                            placeholder="Re-enter your password"
+                            required
+                        >
+                        <button type="button" class="toggle-password" aria-label="Toggle password visibility">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" name="terms" required>
+                        <span>I agree to the <a href="#">Terms & Conditions</a></span>
+                    </label>
+                </div>
+
+                <button type="submit" class="auth-submit-btn">
+                    <span>Create Account</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+
+                <div class="auth-divider">
+                    <span>or sign up with</span>
+                </div>
+
+                <div class="social-login">
+                    <button type="button" class="social-btn google">
+                        <i class="fa-brands fa-google"></i>
+                        Google
+                    </button>
+                    <button type="button" class="social-btn microsoft">
+                        <i class="fa-brands fa-microsoft"></i>
+                        Microsoft
+                    </button>
+                </div>
+
+                <div class="auth-footer">
+                    <p>Already have an account? <a href="login.html">Sign in here</a></p>
+                </div>
+            </form>
+        </div>
+
+        <div class="auth-background">
+            <div class="gradient-orb orb-1"></div>
+            <div class="gradient-orb orb-2"></div>
+            <div class="gradient-orb orb-3"></div>
+        </div>
+    </main>
+    
+    <script src="script.js"></script>
+    <script src="auth.js"></script>
+</body>
+</html>
