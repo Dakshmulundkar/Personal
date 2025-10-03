@@ -1,9 +1,12 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session
+from flask_cors import CORS
 import os
 import json
 from datetime import datetime
+import processing
 
 app = Flask(__name__)
+CORS(app, resources={r"/api/*": {"origins": "*"}, r"/upload": {"origins": "*"}})
 app.secret_key = 'your-secret-key-change-this-in-production'
 
 # Configuration
@@ -180,5 +183,58 @@ def api_upload():
         }), 400
 
 
+# New endpoint: process attendance image via processing.process_image
+@app.route('/api/process', methods=['POST'])
+def api_process():
+    """Process an uploaded attendance image and return structured results."""
+    # Expecting multipart/form-data with a file field named 'file'
+    file = request.files.get('file')
+    if not file:
+        return jsonify({
+            'success': False,
+            'message': "No file part in the request; expected field name 'file'"
+        }), 400
+
+    if file.filename == '':
+        return jsonify({
+            'success': False,
+            'message': 'No file selected'
+        }), 400
+
+    # Save the uploaded file
+    name, ext = os.path.splitext(file.filename)
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    safe_name = f"{name}_{timestamp}{ext}"
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], safe_name)
+    file.save(filepath)
+
+    # Delegate processing to the processing module
+    try:
+        results = processing.process_image(filepath)
+        # processing.process_image returns a dict; include success flag for consistency
+        if isinstance(results, dict) and 'error' in results:
+            return jsonify({
+                'success': False,
+                'error': results.get('error')
+            }), 400
+        return jsonify({
+            'success': True,
+            'data': results
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Failed to process image: {str(e)}'
+        }), 500
+
+
+# Backward-compatibility: support the old FastAPI-style endpoint path
+@app.route('/upload', methods=['POST'])
+def upload_compat():
+    """Compatibility endpoint mirroring main.py's /upload."""
+    return api_process()
+
+
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=False, host='0.0.0.0', port=port)
