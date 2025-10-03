@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses - A. P. Shah Institute of Technology</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='courses.css') }}">
+    <style>
+        /* Inline tweaks for attendance matrix */
+        .attendance-matrix table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        .attendance-matrix th, .attendance-matrix td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        .attendance-matrix th { background-color: #f2f2f2; }
+        .present { color: #0a7; font-weight: 600; }
+        .absent { color: #d33; font-weight: 700; }
+        .defaulter { color: #d33; font-weight: 700; }
+
+        /* General table styling like the screenshot */
+        #attendanceResults table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+        #attendanceResults th, #attendanceResults td { border: 1px solid #e2e2e2; padding: 8px; font-size: 14px; }
+        #attendanceResults th { background: #f7f7f7; font-weight: 600; }
+        #attendanceResults h2 { margin-top: 1rem; margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <nav class="main-nav">
+            <div class="logo-container">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <h1>A. P. Shah Institute of Technology</h1>
+            </div>
+            
+            <ul class="nav-links">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="#" class="nav-link">Dashboard</a></li>
+                <li><a href="/courses" class="nav-link active">Courses</a></li>
+                <li><a href="#" class="nav-link">Events</a></li>
+            </ul>
+            
+            <div class="header-actions">
+                <a href="#" class="icon-link"><i class="fa-solid fa-bell"></i></a>
+                <a href="#" class="icon-link"><i class="fa-solid fa-comment-dots"></i></a>
+                
+                <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+                    <i class="fa-solid fa-sun"></i>
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                
+                <a href="/login" class="login-btn" id="authButton">Login</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="content-area" id="coursesContent">
+        <div class="courses-header">
+            <h1>Available Courses</h1>
+            <p>Explore our comprehensive range of courses designed to empower your learning journey</p>
+        </div>
+
+        <div class="teacher-upload-section">
+            <div class="upload-card">
+                <div class="upload-header">
+                    <i class="fa-solid fa-chalkboard-user"></i>
+                    <h3>Teacher Course Upload</h3>
+                    <p>Add new course materials for students</p>
+                </div>
+                <form class="upload-form" id="teacherUploadForm">
+                    <div class="form-group">
+                        <label for="subjectName">
+                            <i class="fa-solid fa-book"></i>
+                            Subject Name
+                        </label>
+                        <select 
+                            id="subjectName" 
+                            name="subjectName" 
+                            required
+                        >
+                            <option value="">Select a subject</option>
+                            <option value="DWM">DWM</option>
+                            <option value="IP">IP</option>
+                            <option value="CN">CN</option>
+                            <option value="SE">SE</option>
+                            <option value="TCS">TCS</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="pdfUpload">
+                            <i class="fa-solid fa-file-pdf"></i>
+                            Upload PDF
+                        </label>
+                        <div class="file-upload-wrapper">
+                            <input 
+                                type="file" 
+                                id="pdfUpload" 
+                                name="pdfUpload" 
+                                accept=".pdf"
+                                required
+                            >
+                            <div class="file-upload-display">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                <span class="file-name">Choose a PDF file</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="upload-btn">
+                        <i class="fa-solid fa-upload"></i>
+                        Upload Course Material
+                    </button>
+                </form>
+                <div id="pdfUploadResult" style="display:none; margin-top:1rem;"></div>
+                <div style="margin-top: 1rem;">
+                    <button id="uploadAnotherPdfBtn" class="upload-btn" style="display:none;">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        Upload Another PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attendance Anomaly System -->
+        <div class="upload-card" style="margin-top: 2rem;">
+            <div class="upload-header">
+                <i class="fa-solid fa-table-list"></i>
+                <h3>Attendance Anomaly System</h3>
+                <p>Upload a scanned image of the attendance sheet to process.</p>
+            </div>
+
+            <form id="attendanceUploadForm" class="upload-form">
+                <div class="form-group">
+                    <label for="attendanceFile">
+                        <i class="fa-solid fa-image"></i>
+                        Upload Attendance Image
+                    </label>
+                    <div class="file-upload-wrapper">
+                        <input
+                            type="file"
+                            id="attendanceFile"
+                            name="file"
+                            accept="image/*"
+                            required
+                        >
+                        <div class="file-upload-display">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            <span class="file-name" id="attendanceFileName">Choose an image file</span>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="upload-btn">
+                    <i class="fa-solid fa-magnifying-glass-chart"></i>
+                    Process Attendance
+                </button>
+            </form>
+
+            <div id="attendanceSpinner" style="display:none; margin-top:1em;">
+                <i class="fa-solid fa-spinner fa-spin"></i> Processing, please wait...
+            </div>
+
+            <div id="attendanceResults" style="margin-top: 1rem;"></div>
+            <div style="margin-top: 1rem;">
+                <button id="processAnotherBtn" class="upload-btn" style="display:none;">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    Process Another Image
+                </button>
+            </div>
+        </div>
+
+    </main>
+    
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user) {
+            window.location.href = '/login';
+        }
+
+        const pdfUpload = document.getElementById('pdfUpload');
+        const fileNameDisplay = document.querySelector('.file-name');
+        const uploadForm = document.getElementById('teacherUploadForm');
+        const pdfUploadResult = document.getElementById('pdfUploadResult');
+        const uploadAnotherPdfBtn = document.getElementById('uploadAnotherPdfBtn');
+
+        pdfUpload.addEventListener('change', (e) => {
+            const fileName = e.target.files[0]?.name;
+            if (fileName) {
+                fileNameDisplay.textContent = fileName;
+                fileNameDisplay.style.color = 'var(--accent-color)';
+            } else {
+                fileNameDisplay.textContent = 'Choose a PDF file';
+                fileNameDisplay.style.color = 'var(--text-secondary)';
+            }
+        });
+
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const subjectName = document.getElementById('subjectName').value;
+            const pdfFile = pdfUpload.files[0];
+            
+            if (subjectName && pdfFile) {
+                const uploadBtn = uploadForm.querySelector('.upload-btn');
+                const originalContent = uploadBtn.innerHTML;
+                
+                uploadBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
+                uploadBtn.disabled = true;
+                
+                try {
+                    const formData = new FormData();
+                    formData.append('subjectName', subjectName);
+                    formData.append('pdfUpload', pdfFile);
+                    
+                    const response = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        // Show success result and hide form
+                        pdfUploadResult.style.display = 'block';
+                        pdfUploadResult.textContent = data.message || 'Course material uploaded successfully!';
+                        uploadForm.style.display = 'none';
+                        uploadAnotherPdfBtn.style.display = 'inline-block';
+                    } else {
+                        alert(data.message || 'Upload failed');
+                    }
+                } catch (error) {
+                    alert('Network error. Please try again.');
+                } finally {
+                    uploadBtn.innerHTML = originalContent;
+                    uploadBtn.disabled = false;
+                }
+            }
+        });
+
+        // Reset PDF upload UI to allow another upload
+        uploadAnotherPdfBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            pdfUploadResult.style.display = 'none';
+            pdfUploadResult.textContent = '';
+            uploadAnotherPdfBtn.style.display = 'none';
+            uploadForm.reset();
+            fileNameDisplay.textContent = 'Choose a PDF file';
+            fileNameDisplay.style.color = 'var(--text-secondary)';
+            uploadForm.style.display = '';
+        });
+
+        // ===== Attendance Anomaly System JS =====
+        const attendanceForm = document.getElementById('attendanceUploadForm');
+        const attendanceFile = document.getElementById('attendanceFile');
+        const attendanceFileName = document.getElementById('attendanceFileName');
+        const attendanceSpinner = document.getElementById('attendanceSpinner');
+        const attendanceResults = document.getElementById('attendanceResults');
+        const processAnotherBtn = document.getElementById('processAnotherBtn');
+
+        attendanceFile.addEventListener('change', (e) => {
+            const fn = e.target.files[0]?.name;
+            if (fn) {
+                attendanceFileName.textContent = fn;
+                attendanceFileName.style.color = 'var(--accent-color)';
+            } else {
+                attendanceFileName.textContent = 'Choose an image file';
+                attendanceFileName.style.color = 'var(--text-secondary)';
+            }
+        });
+
+        attendanceForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            if (!attendanceFile.files[0]) return;
+
+            const formData = new FormData();
+            formData.append('file', attendanceFile.files[0]);
+
+            attendanceResults.innerHTML = '';
+            attendanceSpinner.style.display = 'block';
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                attendanceSpinner.style.display = 'none';
+
+                if (!response.ok) {
+                    const txt = await response.text();
+                    throw new Error(`Request failed: ${response.status} ${txt}`);
+                }
+
+                const payload = await response.json();
+
+                if (payload && payload.success === false && payload.error) {
+                    attendanceResults.innerHTML = `<p style="color:red;">Error: ${payload.error}</p>`;
+                    return;
+                }
+
+                // Normalize data depending on our Flask response shape
+                const data = payload.data || payload;
+                renderAttendanceTables(data);
+
+                // Hide the upload form and show only the analysis with a reset button
+                attendanceForm.style.display = 'none';
+                processAnotherBtn.style.display = 'inline-block';
+            } catch (error) {
+                attendanceSpinner.style.display = 'none';
+                attendanceResults.innerHTML = `<p style="color:red;">An error occurred: ${error.message}</p>`;
+            }
+        });
+
+        // Allow user to process another image: reset UI
+        processAnotherBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            attendanceResults.innerHTML = '';
+            attendanceFile.value = '';
+            attendanceFileName.textContent = 'Choose an image file';
+            attendanceFileName.style.color = 'var(--text-secondary)';
+            attendanceForm.style.display = '';
+            processAnotherBtn.style.display = 'none';
+        });
+
+        function renderAttendanceTables(data) {
+            const container = attendanceResults;
+            container.innerHTML = '';
+
+            // 1) Exact attendance matrix (dates as ordered columns)
+            createMatrixTable(container, 'Attendance Matrix', data.dates || [], data.full_report || []);
+
+            // 2) Convenience tables
+            createFullReportTable(container, 'Full Report', data.dates || [], data.full_report || []);
+            createTable(container, ' Defaulter List', data.defaulters);
+            createTable(container, ' Anomaly Report', data.anomalies);
+        }
+
+        function createTable(container, title, rows) {
+            const section = document.createElement('div');
+            const titleEl = document.createElement('h2');
+            titleEl.textContent = title;
+            section.appendChild(titleEl);
+
+            if (!rows || rows.length === 0) {
+                const p = document.createElement('p');
+                p.textContent = 'No data to display.';
+                section.appendChild(p);
+                container.appendChild(section);
+                return;
+            }
+
+            const headers = Object.keys(rows[0]);
+            const table = document.createElement('table');
+            const thead = document.createElement('thead');
+            const trHead = document.createElement('tr');
+            headers.forEach(h => {
+                const th = document.createElement('th');
+                th.textContent = h;
+                trHead.appendChild(th);
+            });
+            thead.appendChild(trHead);
+            table.appendChild(thead);
+
+            const tbody = document.createElement('tbody');
+            rows.forEach(row => {
+                const tr = document.createElement('tr');
+                headers.forEach(h => {
+                    const td = document.createElement('td');
+                    const val = row[h];
+                    if (h === 'Status' && val === 'Defaulter') {
+                        td.classList.add('defaulter');
+                    }
+                    td.textContent = val;
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            });
+            table.appendChild(tbody);
+            section.appendChild(table);
+            container.appendChild(section);
+        }
+
+        // Build the Full Report to match the screenshot order and formatting
+        function createFullReportTable(container, title, dates, rows) {
+            const section = document.createElement('div');
+            const titleEl = document.createElement('h2');
+            titleEl.textContent = title;
+            section.appendChild(titleEl);
+
+            if (!rows || rows.length === 0) {
+                const p = document.createElement('p');
+                p.textContent = 'No data to display.';
+                section.appendChild(p);
+                container.appendChild(section);
+                return;
+            }
+
+            // Header order as per screenshot
+            const leading = ['Roll No', 'Student ID', 'Name'];
+            const trailing = ['Total Lectures', 'Lectures Attended', 'Percentage', 'Status', 'Anomaly'];
+            const headers = [...leading, ...(dates || []), ...trailing];
+
+            const table = document.createElement('table');
+            const thead = document.createElement('thead');
+            const trHead = document.createElement('tr');
+            headers.forEach(h => {
+                const th = document.createElement('th');
+                th.textContent = h;
+                trHead.appendChild(th);
+            });
+            thead.appendChild(trHead);
+            table.appendChild(thead);
+
+            const tbody = document.createElement('tbody');
+            rows.forEach(row => {
+                const tr = document.createElement('tr');
+                headers.forEach(h => {
+                    const td = document.createElement('td');
+                    let val = row[h] !== undefined ? row[h] : '';
+                    // Percentage formatting to 2 decimals if numeric-like
+                    if (h === 'Percentage') {
+                        const num = Number(val);
+                        if (!isNaN(num)) val = num.toFixed(2);
+                    }
+                    // Highlight defaulter in red like screenshot
+                    if (h === 'Status' && String(row['Status']).trim() === 'Defaulter') {
+                        td.classList.add('defaulter');
+                    }
+                    td.textContent = val;
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            });
+            table.appendChild(tbody);
+            section.appendChild(table);
+            container.appendChild(section);
+        }
+
+        function createMatrixTable(container, title, dates, rows) {
+            const section = document.createElement('div');
+            section.classList.add('attendance-matrix');
+            const titleEl = document.createElement('h2');
+            titleEl.textContent = title;
+            section.appendChild(titleEl);
+
+            if (!rows || rows.length === 0 || !dates || dates.length === 0) {
+                const p = document.createElement('p');
+                p.textContent = 'No data to display.';
+                section.appendChild(p);
+                container.appendChild(section);
+                return;
+            }
+
+            // Define fixed leading columns and then all dates in provided order
+            const leading = ['Roll No', 'Student ID', 'Name'];
+            const headers = [...leading, ...dates];
+
+            const table = document.createElement('table');
+            const thead = document.createElement('thead');
+            const trHead = document.createElement('tr');
+            headers.forEach(h => {
+                const th = document.createElement('th');
+                th.textContent = h;
+                trHead.appendChild(th);
+            });
+            thead.appendChild(trHead);
+            table.appendChild(thead);
+
+            const tbody = document.createElement('tbody');
+            rows.forEach(row => {
+                const tr = document.createElement('tr');
+                headers.forEach(h => {
+                    const td = document.createElement('td');
+                    let val = row[h] !== undefined ? row[h] : '';
+                    // Normalize attendance markers to P/A for exact sheet-like view
+                    if (dates.includes(h)) {
+                        const raw = String(val).trim().toLowerCase();
+                        if (raw === 'present' || raw === 'p' || raw === '✓' || raw === '✔') {
+                            val = 'P';
+                            td.classList.add('present');
+                        } else if (raw === 'absent' || raw === 'a' || raw === 'ab' || raw === '') {
+                            val = 'A';
+                            td.classList.add('absent');
+                        }
+                    }
+                    // Highlight defaulters if status present
+                    if (h === 'Status' && row['Status'] === 'Defaulter') {
+                        td.classList.add('defaulter');
+                    }
+                    td.textContent = val;
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            });
+            table.appendChild(tbody);
+            section.appendChild(table);
+            container.appendChild(section);
+        }
+
+    </script>
+</body>
+</html>
