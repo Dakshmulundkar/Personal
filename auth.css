@@ -397,6 +397,10 @@
     color: #00A4EF;
 }
 
+.social-btn.full-width {
+    grid-column: 1 / -1;
+}
+
 /* --- Auth Footer --- */
 .auth-footer {
     text-align: center;

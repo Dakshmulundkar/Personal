@@ -25,6 +25,25 @@ document.addEventListener('DOMContentLoaded', () => {
     
     applySavedTheme();
 
+    const updateAuthButton = () => {
+        const authButton = document.getElementById('authButton');
+        const user = JSON.parse(localStorage.getItem('user'));
+        
+        if (authButton && user) {
+            authButton.textContent = user.name;
+            authButton.href = '#';
+            authButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (confirm('Do you want to logout?')) {
+                    localStorage.removeItem('user');
+                    window.location.href = 'index.html';
+                }
+            });
+        }
+    };
+
+    updateAuthButton();
+
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
         link.addEventListener('click', (event) => {

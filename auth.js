@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             
+            const email = document.getElementById('email').value;
             const submitBtn = loginForm.querySelector('.auth-submit-btn');
             const originalText = submitBtn.innerHTML;
             
@@ -56,10 +57,16 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.disabled = true;
             
             setTimeout(() => {
-                alert('Login functionality would be connected to your backend here!');
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-            }, 1500);
+                const userName = email.split('@')[0];
+                const user = {
+                    name: userName,
+                    email: email
+                };
+                
+                localStorage.setItem('user', JSON.stringify(user));
+                
+                window.location.href = 'index.html';
+            }, 1000);
         });
     }
 
@@ -76,6 +83,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('signupEmail').value;
+            
             const submitBtn = signupForm.querySelector('.auth-submit-btn');
             const originalText = submitBtn.innerHTML;
             
@@ -83,18 +94,22 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.disabled = true;
             
             setTimeout(() => {
-                alert('Signup functionality would be connected to your backend here!');
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-            }, 1500);
+                const user = {
+                    name: `${firstName} ${lastName}`,
+                    email: email
+                };
+                
+                localStorage.setItem('user', JSON.stringify(user));
+                
+                window.location.href = 'index.html';
+            }, 1000);
         });
     }
 
     const socialButtons = document.querySelectorAll('.social-btn');
     socialButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-            const provider = btn.classList.contains('google') ? 'Google' : 'Microsoft';
-            alert(`${provider} authentication would be implemented here!`);
+            alert('Google authentication would be implemented here!');
         });
     });
 });

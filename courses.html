@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses - A. P. Shah Institute of Technology</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="courses.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <nav class="main-nav">
+            <div class="logo-container">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <h1>A. P. Shah Institute of Technology</h1>
+            </div>
+            
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="#" class="nav-link">Dashboard</a></li>
+                <li><a href="courses.html" class="nav-link active">Courses</a></li>
+                <li><a href="#" class="nav-link">Events</a></li>
+            </ul>
+            
+            <div class="header-actions">
+                <a href="#" class="icon-link"><i class="fa-solid fa-bell"></i></a>
+                <a href="#" class="icon-link"><i class="fa-solid fa-comment-dots"></i></a>
+                
+                <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+                    <i class="fa-solid fa-sun"></i>
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                
+                <a href="login.html" class="login-btn" id="authButton">Login</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="content-area" id="coursesContent">
+        <div class="courses-header">
+            <h1>Available Courses</h1>
+            <p>Explore our comprehensive range of courses designed to empower your learning journey</p>
+        </div>
+
+        <div class="courses-grid">
+            <div class="course-card">
+                <div class="course-icon">
+                    <i class="fa-solid fa-code"></i>
+                </div>
+                <h3>Web Development</h3>
+                <p>Master HTML, CSS, JavaScript and modern frameworks</p>
+                <div class="course-meta">
+                    <span><i class="fa-solid fa-clock"></i> 12 weeks</span>
+                    <span><i class="fa-solid fa-users"></i> 150 students</span>
+                </div>
+                <button class="course-btn">Enroll Now</button>
+            </div>
+
+            <div class="course-card">
+                <div class="course-icon">
+                    <i class="fa-solid fa-mobile-screen"></i>
+                </div>
+                <h3>Mobile App Development</h3>
+                <p>Build native and cross-platform mobile applications</p>
+                <div class="course-meta">
+                    <span><i class="fa-solid fa-clock"></i> 10 weeks</span>
+                    <span><i class="fa-solid fa-users"></i> 120 students</span>
+                </div>
+                <button class="course-btn">Enroll Now</button>
+            </div>
+
+            <div class="course-card">
+                <div class="course-icon">
+                    <i class="fa-solid fa-database"></i>
+                </div>
+                <h3>Data Science</h3>
+                <p>Learn data analysis, machine learning and AI</p>
+                <div class="course-meta">
+                    <span><i class="fa-solid fa-clock"></i> 16 weeks</span>
+                    <span><i class="fa-solid fa-users"></i> 200 students</span>
+                </div>
+                <button class="course-btn">Enroll Now</button>
+            </div>
+
+            <div class="course-card">
+                <div class="course-icon">
+                    <i class="fa-solid fa-brain"></i>
+                </div>
+                <h3>Artificial Intelligence</h3>
+                <p>Explore neural networks, deep learning and AI systems</p>
+                <div class="course-meta">
+                    <span><i class="fa-solid fa-clock"></i> 14 weeks</span>
+                    <span><i class="fa-solid fa-users"></i> 180 students</span>
+                </div>
+                <button class="course-btn">Enroll Now</button>
+            </div>
+
+            <div class="course-card">
+                <div class="course-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h3>Cybersecurity</h3>
+                <p>Master security protocols and ethical hacking</p>
+                <div class="course-meta">
+                    <span><i class="fa-solid fa-clock"></i> 12 weeks</span>
+                    <span><i class="fa-solid fa-users"></i> 95 students</span>
+                </div>
+                <button class="course-btn">Enroll Now</button>
+            </div>
+
+            <div class="course-card">
+                <div class="course-icon">
+                    <i class="fa-solid fa-cloud"></i>
+                </div>
+                <h3>Cloud Computing</h3>
+                <p>Learn AWS, Azure and cloud architecture</p>
+                <div class="course-meta">
+                    <span><i class="fa-solid fa-clock"></i> 10 weeks</span>
+                    <span><i class="fa-solid fa-users"></i> 140 students</span>
+                </div>
+                <button class="course-btn">Enroll Now</button>
+            </div>
+        </div>
+    </main>
+    
+    <script src="script.js"></script>
+    <script>
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user) {
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>
