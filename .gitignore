@@ -1,0 +1,51 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment files
+.env
+.env.*
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Build and packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Logs and coverage
+*.log
+.log/
+coverage/
+htmlcov/
+.pytest_cache/
+.tox/
+.mypy_cache/
+.cache/
+
+# Databases and state
+*.sqlite3
+instance/
+
+# Flask uploads and temp data
+uploads/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Node (if present for front-end assets)
+node_modules/
+
+# Local tooling
+*.local
