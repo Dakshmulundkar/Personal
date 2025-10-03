@@ -50,6 +50,54 @@
             <p>Explore our comprehensive range of courses designed to empower your learning journey</p>
         </div>
 
+        <div class="teacher-upload-section">
+            <div class="upload-card">
+                <div class="upload-header">
+                    <i class="fa-solid fa-chalkboard-user"></i>
+                    <h3>Teacher Course Upload</h3>
+                    <p>Add new course materials for students</p>
+                </div>
+                <form class="upload-form" id="teacherUploadForm">
+                    <div class="form-group">
+                        <label for="subjectName">
+                            <i class="fa-solid fa-book"></i>
+                            Subject Name
+                        </label>
+                        <input 
+                            type="text" 
+                            id="subjectName" 
+                            name="subjectName" 
+                            placeholder="Enter subject name"
+                            required
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="pdfUpload">
+                            <i class="fa-solid fa-file-pdf"></i>
+                            Upload PDF
+                        </label>
+                        <div class="file-upload-wrapper">
+                            <input 
+                                type="file" 
+                                id="pdfUpload" 
+                                name="pdfUpload" 
+                                accept=".pdf"
+                                required
+                            >
+                            <div class="file-upload-display">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                <span class="file-name">Choose a PDF file</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="upload-btn">
+                        <i class="fa-solid fa-upload"></i>
+                        Upload Course Material
+                    </button>
+                </form>
+            </div>
+        </div>
+
         <div class="courses-grid">
             <div class="course-card">
                 <div class="course-icon">
@@ -137,6 +185,45 @@
         if (!user) {
             window.location.href = 'login.html';
         }
+
+        const pdfUpload = document.getElementById('pdfUpload');
+        const fileNameDisplay = document.querySelector('.file-name');
+        const uploadForm = document.getElementById('teacherUploadForm');
+
+        pdfUpload.addEventListener('change', (e) => {
+            const fileName = e.target.files[0]?.name;
+            if (fileName) {
+                fileNameDisplay.textContent = fileName;
+                fileNameDisplay.style.color = 'var(--accent-color)';
+            } else {
+                fileNameDisplay.textContent = 'Choose a PDF file';
+                fileNameDisplay.style.color = 'var(--text-secondary)';
+            }
+        });
+
+        uploadForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const subjectName = document.getElementById('subjectName').value;
+            const pdfFile = pdfUpload.files[0];
+            
+            if (subjectName && pdfFile) {
+                const uploadBtn = uploadForm.querySelector('.upload-btn');
+                const originalContent = uploadBtn.innerHTML;
+                
+                uploadBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
+                uploadBtn.disabled = true;
+                
+                setTimeout(() => {
+                    alert(`Course material uploaded successfully!\nSubject: ${subjectName}\nFile: ${pdfFile.name}`);
+                    uploadForm.reset();
+                    fileNameDisplay.textContent = 'Choose a PDF file';
+                    fileNameDisplay.style.color = 'var(--text-secondary)';
+                    uploadBtn.innerHTML = originalContent;
+                    uploadBtn.disabled = false;
+                }, 1500);
+            }
+        });
     </script>
 </body>
 </html>

@@ -1,5 +1,150 @@
 /* --- Courses Page Styling --- */
 
+/* --- Teacher Upload Section --- */
+.teacher-upload-section {
+    max-width: 800px;
+    margin: 0 auto 60px;
+    padding: 0 20px;
+}
+
+.upload-card {
+    background: var(--card-bg);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 40px var(--shadow-color);
+}
+
+.upload-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.upload-header i {
+    font-size: 3rem;
+    color: var(--accent-color);
+    margin-bottom: 16px;
+    display: block;
+}
+
+.upload-header h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.upload-header p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+.upload-form .form-group {
+    margin-bottom: 24px;
+}
+
+.upload-form label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+}
+
+.upload-form label i {
+    color: var(--accent-color);
+}
+
+.upload-form input[type="text"] {
+    width: 100%;
+    padding: 14px 18px;
+    background: var(--input-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.upload-form input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 4px var(--accent-glow);
+}
+
+.file-upload-wrapper {
+    position: relative;
+}
+
+.upload-form input[type="file"] {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.file-upload-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 40px 20px;
+    background: var(--input-bg);
+    border: 2px dashed var(--border-color);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.file-upload-wrapper:hover .file-upload-display {
+    border-color: var(--accent-color);
+    background: rgba(124, 58, 237, 0.05);
+}
+
+.file-upload-display i {
+    font-size: 2rem;
+    color: var(--accent-color);
+}
+
+.file-upload-display .file-name {
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+.upload-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: var(--gradient-accent);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 16px 32px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 20px var(--accent-glow);
+    margin-top: 8px;
+}
+
+.upload-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px var(--accent-glow);
+}
+
+.upload-btn i {
+    font-size: 1.1rem;
+}
+
 .courses-header {
     text-align: center;
     padding: 80px 20px 60px;
@@ -193,6 +338,18 @@
 
 /* --- Responsive Design --- */
 @media (max-width: 768px) {
+    .teacher-upload-section {
+        margin-bottom: 40px;
+    }
+
+    .upload-card {
+        padding: 30px 24px;
+    }
+
+    .upload-header h3 {
+        font-size: 1.5rem;
+    }
+
     .courses-header {
         padding: 60px 20px 40px;
     }
@@ -217,6 +374,27 @@
 }
 
 @media (max-width: 480px) {
+    .upload-card {
+        padding: 24px 20px;
+    }
+
+    .upload-header i {
+        font-size: 2.5rem;
+    }
+
+    .upload-header h3 {
+        font-size: 1.3rem;
+    }
+
+    .upload-header p {
+        font-size: 0.9rem;
+    }
+
+    .upload-btn {
+        padding: 14px 24px;
+        font-size: 1rem;
+    }
+
     .courses-header h1 {
         font-size: 2rem;
     }
