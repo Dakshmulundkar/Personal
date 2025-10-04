@@ -37,6 +37,9 @@
                 <i class="fa-solid fa-graduation-cap"></i>
                 <h1>A. P. Shah Institute of Technology</h1>
             </div>
+            <button id="hamburger" class="hamburger" aria-label="Toggle menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
             
             <ul class="nav-links">
                 <li><a href="/" class="nav-link">Home</a></li>
@@ -222,16 +225,28 @@
                     });
                     
                     const data = await response.json();
-                    
-                    if (data.success) {
-                        // Show success result and hide form
-                        pdfUploadResult.style.display = 'block';
-                        pdfUploadResult.textContent = data.message || 'Course material uploaded successfully!';
-                        uploadForm.style.display = 'none';
-                        uploadAnotherPdfBtn.style.display = 'inline-block';
-                    } else {
-                        alert(data.message || 'Upload failed');
+
+                    if (!data.success) {
+                        alert(data.error || data.message || 'Upload/analysis failed');
+                        return;
                     }
+
+                    // Render attendance analysis tables for the uploaded PDF
+                    const analysis = data.data || data;
+
+                    // Create a container to render analysis result within the PDF card
+                    const tempContainer = document.createElement('div');
+                    tempContainer.id = 'pdfAnalysisResults';
+                    pdfUploadResult.innerHTML = '';
+                    pdfUploadResult.appendChild(tempContainer);
+                    pdfUploadResult.style.display = 'block';
+
+                    // Render analysis into the PDF result area (without using the image section)
+                    renderAttendanceTablesInto(tempContainer, analysis);
+
+                    // Hide the upload form and show reset button
+                    uploadForm.style.display = 'none';
+                    uploadAnotherPdfBtn.style.display = 'inline-block';
                 } catch (error) {
                     alert('Network error. Please try again.');
                 } finally {
@@ -335,6 +350,15 @@
             createMatrixTable(container, 'Attendance Matrix', data.dates || [], data.full_report || []);
 
             // 2) Convenience tables
+            createFullReportTable(container, 'Full Report', data.dates || [], data.full_report || []);
+            createTable(container, ' Defaulter List', data.defaulters);
+            createTable(container, ' Anomaly Report', data.anomalies);
+        }
+
+        // Renders the attendance tables into a provided container element.
+        function renderAttendanceTablesInto(container, data) {
+            container.innerHTML = '';
+            createMatrixTable(container, 'Attendance Matrix', data.dates || [], data.full_report || []);
             createFullReportTable(container, 'Full Report', data.dates || [], data.full_report || []);
             createTable(container, ' Defaulter List', data.defaulters);
             createTable(container, ' Anomaly Report', data.anomalies);
