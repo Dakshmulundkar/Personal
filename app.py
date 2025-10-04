@@ -3,15 +3,32 @@ from flask_cors import CORS
 import os
 import json
 from datetime import datetime
-import processing
+import processing2 as processing
+from dotenv import load_dotenv, find_dotenv
+
+"""
+Load environment variables from a .env file. We first look for a .env next to this file,
+and fall back to searching upward in the directory tree. This mirrors the logic in
+`processing.py` so the app behaves the same regardless of how it's started.
+"""
+dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+if not os.path.exists(dotenv_path):
+    dotenv_path = find_dotenv()
+load_dotenv(dotenv_path)
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "*"}, r"/upload": {"origins": "*"}})
-app.secret_key = 'your-secret-key-change-this-in-production'
+
+# Configure CORS origins via env, default to allowing all
+cors_origins = [o.strip() for o in os.getenv('CORS_ORIGINS', '*').split(',')] if os.getenv('CORS_ORIGINS') else '*'
+CORS(app, resources={r"/api/*": {"origins": cors_origins}, r"/upload": {"origins": cors_origins}})
+
+# Secret key from env
+app.secret_key = os.getenv('SECRET_KEY', 'dev-secret-change-me')
 
 # Configuration
-app.config['UPLOAD_FOLDER'] = 'uploads'
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
+app.config['UPLOAD_FOLDER'] = os.getenv('UPLOAD_FOLDER', 'uploads')
+max_mb = int(os.getenv('MAX_CONTENT_MB', '16'))
+app.config['MAX_CONTENT_LENGTH'] = max_mb * 1024 * 1024  # in bytes
 
 # Create uploads directory if it doesn't exist
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
@@ -171,11 +188,24 @@ def api_upload():
         filename = f"{subject_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
-        
-        return jsonify({
-            'success': True,
-            'message': f'Course material uploaded successfully! Subject: {subject_name}, File: {filename}'
-        })
+
+        # Analyze the uploaded PDF as an attendance sheet
+        try:
+            results = processing.process_pdf(filepath)
+            if isinstance(results, dict) and 'error' in results:
+                return jsonify({
+                    'success': False,
+                    'error': results.get('error')
+                }), 400
+            return jsonify({
+                'success': True,
+                'data': results
+            })
+        except Exception as e:
+            return jsonify({
+                'success': False,
+                'message': f'Failed to analyze PDF: {str(e)}'
+            }), 500
     else:
         return jsonify({
             'success': False,
@@ -236,5 +266,7 @@ def upload_compat():
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(debug=False, host='0.0.0.0', port=port)
+    host = os.getenv('HOST', '0.0.0.0')
+    port = int(os.getenv('PORT', '5000'))
+    debug = os.getenv('FLASK_DEBUG', '0') in ('1', 'true', 'True')
+    app.run(debug=debug, host=host, port=port)
